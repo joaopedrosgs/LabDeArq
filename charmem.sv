@@ -1,25 +1,27 @@
 //------------------------------------------------
-// mipsmem.sv
-// Sarah_Harris@hmc.edu 27 May 2007
-// Update to SystemVerilog 17 Nov 2010 DMH
-// External unified memory used by MIPS multicycle
-// processor.
+// charmem.sv
+// Memoria externa para os caracteres.
 //------------------------------------------------
 
-module charmem(input  logic        clk,
-           input  logic [5:0] caractere, 
-           output logic [63:0] bitmap);
+module charmem( input  logic        clk,
+                input logic charprint,
+                input  logic [5:0] caractere, 
+                output logic [63:0] bitmap);
 
-  logic  [63:0] RAM[39:0];
+  logic  [63:0] CRAM[39:0];
 
 
 
-  // initialize memory with instructions
+  // inicializando a memoria com os bitmaps 
   initial
     begin
-      $readmemh("charmem.dat",RAM);  // "memfile.dat" contains your instructions in hex
-                                     // you must create this file
+      $readmemh("charmem.dat",CRAM);  
     end
 
-  assign bitmap = RAM[caractere];
+  always @(posedge clk) begin
+    if (charprint) begin
+      bitmap = CRAM[caractere];
+    end
+  end
+
 endmodule

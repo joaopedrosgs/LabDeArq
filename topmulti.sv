@@ -41,12 +41,12 @@ module topmulti (
 	);  
   
   // microprocessor (control & datapath)
-  mips mips(CLOCK_25, reset, adr, writedata, memwrite, readdata);
+  mips mips(CLOCK_25, reset, adr, writedata, memwrite, readdata, charprint);
 
   // memory 
   mem mem(CLOCK_25, memwrite, adr, writedata, readdata);
 	
 	// video memory
-	charmem charmem(clock_25,readdata[25:20], vdata )
+	charmem charmem(clock_25,charprint, readdata[25:20], vdata )
 
 endmodule

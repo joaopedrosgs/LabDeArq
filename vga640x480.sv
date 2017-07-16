@@ -48,6 +48,8 @@ parameter vchar = 8;
 // registers for storing the horizontal & vertical counters
 reg [9:0] hc;
 reg [9:0] vc;
+reg [2:0] charh;
+reg [2:0] charv;
 
 wire pixel;
 
@@ -85,7 +87,7 @@ begin
   else
   begin
     // keep counting until the end of the line
-    if (hc < hpixels - 1)
+    if (hc < 800 - 1)
       hc <= hc + 1;
     else
     // When we hit the end of the line, reset the horizontal
@@ -94,7 +96,7 @@ begin
     // reset that one too.
     begin
       hc <= 0;
-      if (vc < vlines - 1)
+      if (vc < 525 - 1)
         vc <= vc + 1;
       else
         vc <= 0;
@@ -112,13 +114,10 @@ end
 always @(*)
 begin
   // first check if we're within vertical active video range
-  if (vc < vlines-vbp-vpulse-vfp)
+  if (vc <480)
   begin
-    // now display different colors every 80 pixels
-    // while we're within the active horizontal range
-    // -----------------
-    // display white bar
-    if (hc < hpixels-hbp-hpulse-hfp)
+
+    if (hc < 640)
     begin
       red = {4{pixel}};
       green = {4{pixel}};

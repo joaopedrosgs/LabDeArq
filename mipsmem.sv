@@ -6,9 +6,9 @@
 // processor.
 //------------------------------------------------
 
-module mem(input  logic        clk, we,
-           input  logic [31:0] a, wd, 
-           output logic [31:0] rd);
+module mem(input  logic        clk, memwrite,
+           input  logic [31:0] adr, writedata, 
+           output logic [31:0] readdata);
 
   logic  [31:0] RAM[63:0];
 
@@ -19,10 +19,10 @@ module mem(input  logic        clk, we,
                                      // you must create this file
     end
 
-  assign rd = RAM[a[31:2]]; // word aligned
+  assign readdata = RAM[a[31:2]]; // word aligned
 
 
   always_ff @(posedge clk)
-    if (we)
-      RAM[a[31:2]] <= wd;
+    if (memwrite)
+      RAM[adr[31:2]] <= writedata;
 endmodule
