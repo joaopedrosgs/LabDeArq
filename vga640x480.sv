@@ -22,8 +22,7 @@
 module vga640x480(
   input wire dclk,      //pixel clock: 25MHz
   input wire clr,      //asynchronous reset
-  input wire [31:0] vdata,   //video data from memory 
-  output wire [31:0] vadr,   //video address to memory
+  input wire [63:0] vdata,   //video data from memory 
   output wire hsync,    //horizontal sync out
   output wire vsync,    //vertical sync out
   output reg [3:0] red,  //red vga output
@@ -43,19 +42,23 @@ parameter vfp = 10;   // beginning of vertical front porch
 parameter vpulse = 2;   // vsync pulse length
 parameter vbp = 33;     // end of vertical back porch
 
+parameter hchar = 8;
+parameter vchar = 8;
+
 // registers for storing the horizontal & vertical counters
 reg [9:0] hc;
 reg [9:0] vc;
 
 wire pixel;
 
+
 // Downsampling to 20x20 pixels per bit 
 
 // 480 / 20 = 24 rows  
-assign vadr = (vc / 20 + 40)<<2;
 
-// 640 / 20 = 32 columns 
-assign pixel = vdata[31-(hc / 20)];
+
+// 640 / 80 = 8 columns 
+assign pixel = vdata[63-(hc / 80)];
 
 // generate sync pulses (active low)
 // ----------------

@@ -19,7 +19,8 @@ module topmulti (
 
 	logic CLOCK_25;
   
-  logic [31:0] writedata, adr, readdata, vadr, vdata;
+  logic [31:0] writedata, adr, readdata, vadr;
+	logic [63:0] vdata;
   logic        memwrite;
   
 	clockdiv cd(
@@ -32,7 +33,6 @@ module topmulti (
 	.clr(reset),
 	.dclk(CLOCK_25),
   .vdata(vdata),
-  .vadr(vadr),
 	.hsync(VGA_HS),
 	.vsync(VGA_VS),
 	.red(VGA_R),
@@ -44,6 +44,9 @@ module topmulti (
   mips mips(CLOCK_25, reset, adr, writedata, memwrite, readdata);
 
   // memory 
-  mem mem(CLOCK_25, memwrite, adr, writedata, vadr, readdata, vdata);
+  mem mem(CLOCK_25, memwrite, adr, writedata, readdata);
+	
+	// video memory
+	charmem charmem(clock_25,readdata[25:20], vdata )
 
 endmodule
