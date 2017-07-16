@@ -60,7 +60,7 @@ wire pixel;
 
 
 // 640 / 80 = 8 columns 
-assign pixel = vdata[63-(hc / 80)];
+assign pixel = vdata[63-(hc / 80)+((vc/60)*8)];
 
 // generate sync pulses (active low)
 // ----------------
