@@ -44,10 +44,13 @@ parameter vbp = 33;     // end of vertical back porch
 
 parameter hchar = 8;
 parameter vchar = 8;
+parameter paddingtop = 208+vbp:
+parameter paddingleft = 288+hbp;
 
 // registers for storing the horizontal & vertical counters
 reg [9:0] hc;
 reg [9:0] vc;
+
 reg [2:0] charh;
 reg [2:0] charv;
 
@@ -56,11 +59,8 @@ wire pixel;
 
 // Downsampling to 20x20 pixels per bit 
 
-// 480 / 20 = 24 rows  
-
-
-// 640 / 80 = 8 columns 
-assign pixel = vdata[63-(hc / 80)+((vc/60)*8)];
+//upsampling to 64x64
+assign pixel = vdata[((hc-paddingleft)/8) + ((vc-paddingtop/8)*8)];
 
 // generate sync pulses (active low)
 // ----------------
@@ -113,11 +113,11 @@ end
 // Assignment statements can only be used on type "reg" and should be of the "blocking" type: =
 always @(*)
 begin
-  // first check if we're within vertical active video range
-  if (vc <480)
+  // os 64 pixels centrais da tela
+  if (vc > paddingtop && vc < paddingtop + 64)
   begin
 
-    if (hc < 640)
+    if (hc > paddingleft  && hc < paddingtop-64 )
     begin
       red = {4{pixel}};
       green = {4{pixel}};
